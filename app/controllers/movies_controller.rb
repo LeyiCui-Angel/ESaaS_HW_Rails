@@ -8,22 +8,34 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
+    redirect = false
     if params[:ratings]
       session[:ratings] = params[:ratings]
+      redirect = true
       @ratings_to_show = params[:ratings]&.keys
     elsif session[:ratings]
       @ratings_to_show = session[:ratings].keys
     else
       @ratings_to_show = @all_ratings
     end
+
+    if params[:order] || params[:direction]
+      session[:order] = params[:order]
+      session[:direction] = params[:direction]
+      redirect = true
+    else
+      order = params[:order] || 'title'
+      direction = params[:direction] || 'asc'
+    end
     @checked_ratings = @ratings_to_show
-    # sorting
-    order = params[:order] || 'title'
-    direction = params[:direction] || 'asc'
     @current_order = order
     @current_dir = direction
 
     @movies = Movie.where(rating: @ratings_to_show).order("#{@current_order} #{@current_dir}")
+
+    if redirect
+      redirect_to movies_path
+    end
   end  
 
   def get_ratings
