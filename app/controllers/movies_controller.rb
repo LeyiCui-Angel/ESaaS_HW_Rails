@@ -10,11 +10,10 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.all_ratings
     if params[:ratings]
       @ratings_to_show = params[:ratings]&.keys
-      @checked_ratings = @ratings_to_show
     else
-      @ratings_to_show = []
-      @checked_ratings = @all_ratings
+      @ratings_to_show = @all_ratings
     end
+    @checked_ratings = @ratings_to_show
     # sorting
     order = params[:order] || 'title'
     direction = params[:direction] || 'asc'
