@@ -15,7 +15,13 @@ class MoviesController < ApplicationController
       @ratings_to_show = []
       @checked_ratings = @all_ratings
     end
-    @movies = Movie.with_ratings(@checked_ratings)
+    # sorting
+    order = params[:order] || 'title'
+    direction = params[:direction] || 'asc'
+    @current_order = order
+    @current_dir = direction
+
+    @movies = Movie.where(rating: @ratings_to_show).order("#{@current_order} #{@current_dir}")
   end  
 
   def get_ratings
